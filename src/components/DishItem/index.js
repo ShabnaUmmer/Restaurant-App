@@ -1,18 +1,42 @@
+import {useContext} from 'react'
 
+import {CartContext} from '../../Context/CartContext'
 import './index.css'
 
-const DishItem = ({dish, updateCart, quantity}) => {
-   const handleIncrement = () => {
+/* eslint-disable camelcase */
+
+const DishItem = ({dish}) => {
+  const {
+    cartList,
+    addCartItem,
+    incrementCartItemQuantity,
+    decrementCartItemQuantity,
+  } = useContext(CartContext)
+
+  const cartItem = cartList.find(item => item.dish_id === dish.dish_id)
+  const quantity = cartItem?.quantity || 0
+
+  const handleAddToCart = () => {
     if (dish.dish_Availability) {
-      updateCart(dish.dish_id, quantity + 1);
+      if (cartItem) {
+        incrementCartItemQuantity(dish.dish_id)
+      } else {
+        addCartItem({...dish, quantity: 1})
+      }
     }
-  };
+  }
+
+  const handleIncrement = () => {
+    if (dish.dish_Availability && quantity > 0) {
+      incrementCartItemQuantity(dish.dish_id)
+    }
+  }
 
   const handleDecrement = () => {
-    if (dish.dish_Availability && quantity > 0) {
-      updateCart(dish.dish_id, quantity - 1);
+    if (dish.dish_Availability && quantity > 1) {
+      decrementCartItemQuantity(dish.dish_id)
     }
-  };
+  }
 
   return (
     <div className="item-container">
@@ -26,7 +50,9 @@ const DishItem = ({dish, updateCart, quantity}) => {
         )}
         <div className="dish-content">
           <div className="dish-info">
-            <h1 className="dish-name">{dish.dish_name}</h1>
+            <h1 className="dish-name" data-testid="dish-name">
+              {dish.dish_name}
+            </h1>
             <h3 className="dish-price">
               {dish.dish_currency} {dish.dish_price}
             </h3>
@@ -37,12 +63,34 @@ const DishItem = ({dish, updateCart, quantity}) => {
           </div>
           {dish.dish_Availability && (
             <div className="dish-controls">
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="add-to-cart-btn"
+                data-testid="add-to-cart"
+                aria-label="Add to cart"
+              >
+                ADD TO CART
+              </button>
+
               <div className="quantity-controls">
-                <button onClick={handleDecrement}>
+                <button
+                  type="button"
+                  onClick={handleDecrement}
+                  aria-label="Decrease quantity"
+                  data-testid="decrement-button"
+                >
                   -
                 </button>
-                <span>{quantity}</span>
-                <button onClick={handleIncrement}>+</button>
+                <span data-testid="quantity">{quantity}</span>
+                <button
+                  type="button"
+                  onClick={handleIncrement}
+                  aria-label="Increase quantity"
+                  data-testid="increment-button"
+                >
+                  +
+                </button>
               </div>
               {dish.addonCat?.length > 0 && (
                 <p className="customization">Customizations available</p>
@@ -60,6 +108,7 @@ const DishItem = ({dish, updateCart, quantity}) => {
             src={dish.dish_image}
             alt={dish.dish_name}
             className="dish-image"
+            data-testid="dish-image"
           />
         )}
       </div>

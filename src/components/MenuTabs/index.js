@@ -7,6 +7,7 @@ const MenuTabs = ({categories, activeTab, setActiveTab}) => (
         key={category.menu_category_id}
         className={`tab ${activeTab === index ? 'active' : ''}`}
         onClick={() => setActiveTab(index)}
+        type="button"
       >
         {category.menu_category}
       </button>
