@@ -1,9 +1,6 @@
 import {useContext} from 'react'
-
 import {CartContext} from '../../Context/CartContext'
 import './index.css'
-
-/* eslint-disable camelcase */
 
 const DishItem = ({dish}) => {
   const {
@@ -18,23 +15,7 @@ const DishItem = ({dish}) => {
 
   const handleAddToCart = () => {
     if (dish.dish_Availability) {
-      if (cartItem) {
-        incrementCartItemQuantity(dish.dish_id)
-      } else {
-        addCartItem({...dish, quantity: 1})
-      }
-    }
-  }
-
-  const handleIncrement = () => {
-    if (dish.dish_Availability && quantity > 0) {
-      incrementCartItemQuantity(dish.dish_id)
-    }
-  }
-
-  const handleDecrement = () => {
-    if (dish.dish_Availability && quantity > 1) {
-      decrementCartItemQuantity(dish.dish_id)
+      addCartItem({...dish, quantity: 1})
     }
   }
 
@@ -63,35 +44,37 @@ const DishItem = ({dish}) => {
           </div>
           {dish.dish_Availability && (
             <div className="dish-controls">
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className="add-to-cart-btn"
-                data-testid="add-to-cart"
-                aria-label="Add to cart"
-              >
-                ADD TO CART
-              </button>
-
-              <div className="quantity-controls">
+              {quantity === 0 ? (
                 <button
                   type="button"
-                  onClick={handleDecrement}
-                  aria-label="Decrease quantity"
-                  data-testid="decrement-button"
+                  onClick={handleAddToCart}
+                  className="add-to-cart-btn"
+                  data-testid="add-to-cart"
+                  aria-label="Add to cart"
                 >
-                  -
+                  ADD TO CART
                 </button>
-                <span data-testid="quantity">{quantity}</span>
-                <button
-                  type="button"
-                  onClick={handleIncrement}
-                  aria-label="Increase quantity"
-                  data-testid="increment-button"
-                >
-                  +
-                </button>
-              </div>
+              ) : (
+                <div className="quantity-controls">
+                  <button
+                    type="button"
+                    onClick={() => decrementCartItemQuantity(dish.dish_id)}
+                    aria-label="Decrease quantity"
+                    data-testid="decrement-button"
+                  >
+                    -
+                  </button>
+                  <span data-testid="quantity">{quantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => incrementCartItemQuantity(dish.dish_id)}
+                    aria-label="Increase quantity"
+                    data-testid="increment-button"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
               {dish.addonCat?.length > 0 && (
                 <p className="customization">Customizations available</p>
               )}

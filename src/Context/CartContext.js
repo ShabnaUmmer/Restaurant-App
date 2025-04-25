@@ -39,6 +39,10 @@ export const CartProvider = ({children}) => {
     )
   }
 
+  const removeCartItem = dishId => {
+    setCartList(prev => prev.filter(item => item.dish_id !== dishId))
+  }
+
   const removeAllCartItems = () => {
     setCartList([])
   }
@@ -50,6 +54,7 @@ export const CartProvider = ({children}) => {
         addCartItem,
         incrementCartItemQuantity,
         decrementCartItemQuantity,
+        removeCartItem,
         removeAllCartItems,
       }}
     >
