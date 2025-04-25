@@ -1,21 +1,29 @@
-import {useContext} from 'react'
+import {useContext, useState} from 'react'
 import {CartContext} from '../../Context/CartContext'
 import './index.css'
 
 const DishItem = ({dish}) => {
-  const {
-    cartList,
-    addCartItem,
-    incrementCartItemQuantity,
-    decrementCartItemQuantity,
-  } = useContext(CartContext)
+  const {cartList, addCartItem} = useContext(CartContext)
 
+  const [localQuantity, setLocalQuantity] = useState(0)
   const cartItem = cartList.find(item => item.dish_id === dish.dish_id)
-  const quantity = cartItem?.quantity || 0
+  const cartQuantity = cartItem?.quantity || 0
 
   const handleAddToCart = () => {
+    if (dish.dish_Availability && localQuantity > 0) {
+      addCartItem({...dish, quantity: localQuantity})
+    }
+  }
+
+  const handleIncrement = () => {
     if (dish.dish_Availability) {
-      addCartItem({...dish, quantity: 1})
+      setLocalQuantity(prev => prev + 1)
+    }
+  }
+
+  const handleDecrement = () => {
+    if (dish.dish_Availability && localQuantity > 0) {
+      setLocalQuantity(prev => prev - 1)
     }
   }
 
@@ -42,9 +50,31 @@ const DishItem = ({dish}) => {
               <p className="unavailable-text">Not available</p>
             )}
           </div>
+
           {dish.dish_Availability && (
             <div className="dish-controls">
-              {quantity === 0 ? (
+              <div className="quantity-controls">
+                <button
+                  type="button"
+                  onClick={handleDecrement}
+                  aria-label="Decrease quantity"
+                  data-testid="decrement-button"
+                  disabled={localQuantity === 0}
+                >
+                  -
+                </button>
+                <span data-testid="quantity">{localQuantity}</span>
+                <button
+                  type="button"
+                  onClick={handleIncrement}
+                  aria-label="Increase quantity"
+                  data-testid="increment-button"
+                >
+                  +
+                </button>
+              </div>
+
+              {localQuantity > 0 && (
                 <button
                   type="button"
                   onClick={handleAddToCart}
@@ -54,27 +84,8 @@ const DishItem = ({dish}) => {
                 >
                   ADD TO CART
                 </button>
-              ) : (
-                <div className="quantity-controls">
-                  <button
-                    type="button"
-                    onClick={() => decrementCartItemQuantity(dish.dish_id)}
-                    aria-label="Decrease quantity"
-                    data-testid="decrement-button"
-                  >
-                    -
-                  </button>
-                  <span data-testid="quantity">{quantity}</span>
-                  <button
-                    type="button"
-                    onClick={() => incrementCartItemQuantity(dish.dish_id)}
-                    aria-label="Increase quantity"
-                    data-testid="increment-button"
-                  >
-                    +
-                  </button>
-                </div>
               )}
+
               {dish.addonCat?.length > 0 && (
                 <p className="customization">Customizations available</p>
               )}

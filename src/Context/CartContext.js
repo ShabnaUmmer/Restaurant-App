@@ -47,6 +47,11 @@ export const CartProvider = ({children}) => {
     setCartList([])
   }
 
+  const getTotalPrice = () =>
+    cartList
+      .reduce((total, item) => total + item.dish_price * item.quantity, 0)
+      .toFixed(2)
+
   return (
     <CartContext.Provider
       value={{
@@ -56,6 +61,7 @@ export const CartProvider = ({children}) => {
         decrementCartItemQuantity,
         removeCartItem,
         removeAllCartItems,
+        getTotalPrice,
       }}
     >
       {children}
