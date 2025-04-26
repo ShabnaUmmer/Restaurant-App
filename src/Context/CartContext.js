@@ -11,7 +11,7 @@ export const CartProvider = ({children}) => {
       if (existingItem) {
         return prev.map(item =>
           item.dish_id === dish.dish_id
-            ? {...item, quantity: item.quantity + 1}
+            ? {...item, quantity: item.quantity + dish.quantity}
             : item,
         )
       }

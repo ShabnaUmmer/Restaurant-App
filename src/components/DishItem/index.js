@@ -1,13 +1,17 @@
-import {useContext, useState} from 'react'
+import {useContext, useState, useEffect} from 'react'
 import {CartContext} from '../../Context/CartContext'
 import './index.css'
 
 const DishItem = ({dish}) => {
   const {cartList, addCartItem} = useContext(CartContext)
 
-  const [localQuantity, setLocalQuantity] = useState(0)
   const cartItem = cartList.find(item => item.dish_id === dish.dish_id)
   const cartQuantity = cartItem?.quantity || 0
+  const [localQuantity, setLocalQuantity] = useState(cartQuantity)
+
+  useEffect(() => {
+    setLocalQuantity(cartQuantity)
+  }, [cartQuantity])
 
   const handleAddToCart = () => {
     if (dish.dish_Availability && localQuantity > 0) {
