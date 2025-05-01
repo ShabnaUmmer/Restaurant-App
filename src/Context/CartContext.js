@@ -7,10 +7,6 @@ export const CartProvider = ({children}) => {
   const [cartList, setCartList] = useState([])
   const [restaurant_name, setRestaurantName] = useState('')
 
-  const setRestaurant = name => {
-    setRestaurantName(name)
-  }
-
   const addCartItem = dish => {
     setCartList(prev => {
       const existingItem = prev.find(item => item.dish_id === dish.dish_id)

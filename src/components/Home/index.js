@@ -10,7 +10,7 @@ import MenuTabs from '../MenuTabs'
 const Home = () => {
   const [restaurantData, setRestaurantData] = useState(null)
   const [activeTab, setActiveTab] = useState(0)
-  const [error, setError] = useState(null)
+
   const {cartList, setRestaurantName} = useContext(CartContext)
 
   const FetchMenuData = async () => {
@@ -31,11 +31,11 @@ const Home = () => {
         setRestaurantData(data)
         setRestaurantName(data.restaurant_name)
       } catch (err) {
-        setError(err.message)
+        console.error('Failed to fetch data:', err)
       }
     }
     loadData()
-  }, [])
+  }, [setRestaurantName])
 
   if (!restaurantData) {
     return (
