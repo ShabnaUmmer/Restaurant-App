@@ -3,31 +3,60 @@ import {CartContext} from '../../Context/CartContext'
 import './index.css'
 
 const DishItem = ({dish}) => {
-  const {cartList, addCartItem} = useContext(CartContext)
+  const {
+    cartList,
+    addCartItem,
+    incrementCartItemQuantity,
+    decrementCartItemQuantity,
+  } = useContext(CartContext)
 
   const cartItem = cartList.find(item => item.dish_id === dish.dish_id)
-  const cartQuantity = cartItem?.quantity || 0
-  const [localQuantity, setLocalQuantity] = useState(cartQuantity)
+  const [localQty, setLocalQty] = useState(0)
 
   useEffect(() => {
-    setLocalQuantity(cartQuantity)
-  }, [cartQuantity])
-
-  const handleAddToCart = () => {
-    if (dish.dish_Availability && localQuantity > 0) {
-      addCartItem({...dish, quantity: localQuantity})
+    if (cartItem) {
+      setLocalQty(cartItem.quantity)
     }
-  }
+  }, [cartItem])
+
+  const quantityToDisplay = cartItem ? cartItem.quantity : localQty
 
   const handleIncrement = () => {
-    if (dish.dish_Availability) {
-      setLocalQuantity(prev => prev + 1)
+    if (!dish.dish_Availability) return
+
+    if (cartItem) {
+      incrementCartItemQuantity(dish.dish_id)
+    } else {
+      setLocalQty(prev => prev + 1)
     }
   }
 
   const handleDecrement = () => {
-    if (dish.dish_Availability && localQuantity > 0) {
-      setLocalQuantity(prev => prev - 1)
+    if (!dish.dish_Availability) return
+
+    if (cartItem && cartItem.quantity > 0) {
+      decrementCartItemQuantity(dish.dish_id)
+    } else if (!cartItem && localQty > 0) {
+      setLocalQty(prev => prev - 1)
+    }
+  }
+
+  const handleAddToCart = () => {
+    if (dish.dish_Availability && quantityToDisplay > 0) {
+      if (cartItem) {
+        const diff = localQty - cartItem.quantity
+        if (diff > 0) {
+          for (let i = 0; i < diff; i += 1) {
+            incrementCartItemQuantity(dish.dish_id)
+          }
+        } else if (diff < 0) {
+          for (let i = 0; i < -diff; i += 1) {
+            decrementCartItemQuantity(dish.dish_id)
+          }
+        }
+      } else {
+        addCartItem({...dish, quantity: localQty})
+      }
     }
   }
 
@@ -43,9 +72,7 @@ const DishItem = ({dish}) => {
         )}
         <div className="dish-content">
           <div className="dish-info">
-            <h1 className="dish-name" data-testid="dish-name">
-              {dish.dish_name}
-            </h1>
+            <h1 className="dish-name">{dish.dish_name}</h1>
             <h3 className="dish-price">
               {dish.dish_currency} {dish.dish_price}
             </h3>
@@ -54,37 +81,33 @@ const DishItem = ({dish}) => {
               <p className="unavailable-text">Not available</p>
             )}
           </div>
-
           {dish.dish_Availability && (
             <div className="dish-controls">
               <div className="quantity-controls">
                 <button
                   type="button"
                   onClick={handleDecrement}
-                  aria-label="Decrease quantity"
-                  data-testid="decrement-button"
-                  disabled={localQuantity === 0}
+                  data-testid="minus"
+                  aria-label="decrement"
                 >
                   -
                 </button>
-                <span data-testid="quantity">{localQuantity}</span>
+                <p data-testid="active-count">{quantityToDisplay}</p>
                 <button
                   type="button"
                   onClick={handleIncrement}
-                  aria-label="Increase quantity"
-                  data-testid="increment-button"
+                  data-testid="plus"
+                  aria-label="increment"
                 >
                   +
                 </button>
               </div>
 
-              {localQuantity > 0 && (
+              {dish.dish_Availability && quantityToDisplay > 0 && (
                 <button
-                  type="button"
+                  className="add-to-cart-button"
                   onClick={handleAddToCart}
-                  className="add-to-cart-btn"
                   data-testid="add-to-cart"
-                  aria-label="Add to cart"
                 >
                   ADD TO CART
                 </button>

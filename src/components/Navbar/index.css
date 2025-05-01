@@ -38,6 +38,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
+  z-index: 1;
 }
 .restaurant-link {
   text-decoration: none;
@@ -51,10 +52,11 @@
 }
 
 .logout-button {
-  padding: 0.5rem 1rem;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px 20px;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -67,4 +69,10 @@
   align-items: center;
   text-decoration: none;
   color: inherit;
+}
+.cart-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
 }

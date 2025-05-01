@@ -9,11 +9,12 @@ import './index.css'
 
 /* eslint-disable camelcase */
 
-const Navbar = ({restaurant_name}) => {
-  const {cartList} = useContext(CartContext)
+const Navbar = () => {
+  const {cartList, restaurant_name} = useContext(CartContext)
+
   const history = useHistory()
 
-  const totalItems = cartList.length
+  const cartCount = cartList.reduce((sum, item) => sum + item.quantity, 0)
 
   const handleLogout = () => {
     Cookies.remove('jwt_token')
@@ -36,10 +37,12 @@ const Navbar = ({restaurant_name}) => {
         </button>
         <div className="cart-container">
           <h4>My Orders</h4>
-          <Link to="/cart" className="cart-link" data-testid="cart">
+          <Link to="/cart" className="cart-link">
             <div className="cart-counts">
-              <span className="cart-count">{totalItems}</span>
-              <AiOutlineShoppingCart className="cart-icon" />
+              <span className="cart-count">{cartCount}</span>
+              <button type="button" className="cart-button" data-testid="cart">
+                <AiOutlineShoppingCart className="cart-icon" />
+              </button>
             </div>
           </Link>
         </div>

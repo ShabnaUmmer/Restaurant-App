@@ -1,4 +1,5 @@
 import {useState, useEffect, useContext} from 'react'
+import Loader from 'react-loader-spinner'
 import {CartContext} from '../../Context/CartContext'
 import Navbar from '../Navbar'
 import DishItem from '../DishItem'
@@ -10,7 +11,7 @@ const Home = () => {
   const [restaurantData, setRestaurantData] = useState(null)
   const [activeTab, setActiveTab] = useState(0)
   const [error, setError] = useState(null)
-  const {cartList} = useContext(CartContext)
+  const {cartList, setRestaurantName} = useContext(CartContext)
 
   const FetchMenuData = async () => {
     const apiLink =
@@ -28,6 +29,7 @@ const Home = () => {
       try {
         const data = await FetchMenuData()
         setRestaurantData(data)
+        setRestaurantName(data.restaurant_name)
       } catch (err) {
         setError(err.message)
       }
@@ -36,7 +38,11 @@ const Home = () => {
   }, [])
 
   if (!restaurantData) {
-    return <div className="loading">Loading...</div>
+    return (
+      <div className="loading" data-testid="loader">
+        <Loader type="Oval" color="#ffffff" height={50} />
+      </div>
+    )
   }
 
   const totalItems = cartList.reduce((sum, item) => sum + item.quantity, 0)

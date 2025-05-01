@@ -143,26 +143,14 @@
   }
 }
 
-.confirm-modal {
-  border-radius: 10px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.confirm-btn {
-  background-color: green;
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
+.add-to-cart-button {
+  background-color: none;
+  color: green;
+  border: 2px solid green;
+
   height: 30px;
-  padding: 8px;
-}
-.confirm-buttons {
-  display: flex;
-  gap: 20px;
-}
-.confirm-popup {
+  padding: 0 10px;
+
   border-radius: 20px;
+  margin-top: 20px;
 }

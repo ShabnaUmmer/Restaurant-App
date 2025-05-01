@@ -1,6 +1,8 @@
 import {useContext} from 'react'
 import {CartContext} from '../../Context/CartContext'
 
+import './index.css'
+
 /* eslint-disable camelcase */
 
 const CartItem = () => {
@@ -21,43 +23,43 @@ const CartItem = () => {
               alt={item.dish_name}
               className="cart-item-image"
             />
-            <div className="cart-item-details">
+            <div className="cart-item-right">
               <h3>{item.dish_name}</h3>
-              <p>
+              <p className="ci-dish-price">
                 {item.dish_currency} {item.dish_price}
               </p>
+              <div className="cart-item-quantity">
+                <button
+                  onClick={() => decrementCartItemQuantity(item.dish_id)}
+                  type="button"
+                  data-testid="decrement-button"
+                  aria-label="decrease quantity"
+                  className="cart-item-quantity-button"
+                >
+                  -
+                </button>
+                <span>{item.quantity}</span>
+                <button
+                  onClick={() => incrementCartItemQuantity(item.dish_id)}
+                  type="button"
+                  data-testid="increment-button"
+                  aria-label="Increase quantity"
+                  className="cart-item-quantity-button"
+                >
+                  +
+                </button>
+              </div>
             </div>
           </div>
-          <div className="cart-item-right">
-            <div className="cart-item-quantity">
-              <button
-                onClick={() => decrementCartItemQuantity(item.dish_id)}
-                type="button"
-                data-testid="decrement-button"
-                aria-label="Increase quantity"
-              >
-                -
-              </button>
-              <span>{item.quantity}</span>
-              <button
-                onClick={() => incrementCartItemQuantity(item.dish_id)}
-                type="button"
-                data-testid="increment-button"
-                aria-label="Increase quantity"
-              >
-                +
-              </button>
-            </div>
-            <button
-              onClick={() => removeCartItem(item.dish_id)}
-              className="remove-item-btn"
-              type="button"
-              data-testid="remove"
-              aria-label="remove quantity"
-            >
-              Remove
-            </button>
-          </div>
+          <button
+            onClick={() => removeCartItem(item.dish_id)}
+            className="remove-item-btn"
+            type="button"
+            data-testid="remove"
+            aria-label="remove quantity"
+          >
+            Remove
+          </button>
         </li>
       ))}
     </ul>

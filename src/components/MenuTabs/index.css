@@ -8,6 +8,7 @@
   align-items: center;
   scrollbar-width: none;
   box-shadow: 0 0 10px rgba(0.1, 0.1, 0.1, 0.1);
+  list-style-type: none;
 }
 
 .tab {

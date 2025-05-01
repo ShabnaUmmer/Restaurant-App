@@ -2,8 +2,14 @@ import {createContext, useState} from 'react'
 
 export const CartContext = createContext()
 
+/* eslint-disable camelcase */
 export const CartProvider = ({children}) => {
   const [cartList, setCartList] = useState([])
+  const [restaurant_name, setRestaurantName] = useState('')
+
+  const setRestaurant = name => {
+    setRestaurantName(name)
+  }
 
   const addCartItem = dish => {
     setCartList(prev => {
@@ -15,8 +21,12 @@ export const CartProvider = ({children}) => {
             : item,
         )
       }
-      return [...prev, {...dish, quantity: 1}]
+      return [...prev, {...dish}]
     })
+
+    if (dish.restaurant_name) {
+      setRestaurantName(dish.restaurant_name)
+    }
   }
 
   const incrementCartItemQuantity = dishId => {
@@ -45,6 +55,7 @@ export const CartProvider = ({children}) => {
 
   const removeAllCartItems = () => {
     setCartList([])
+    setRestaurantName('')
   }
 
   const getTotalPrice = () =>
@@ -56,6 +67,8 @@ export const CartProvider = ({children}) => {
     <CartContext.Provider
       value={{
         cartList,
+        restaurant_name,
+        setRestaurantName,
         addCartItem,
         incrementCartItemQuantity,
         decrementCartItemQuantity,
